@@ -1,0 +1,13 @@
+{% extends 'buyAndSell/layout.html' %}
+{% block title %}Create A Post{% endblock title %}
+
+{% block content %}
+<form action = '{% url 'mainApp:create_new_post' %}' method = 'POST'>
+  {% csrf_token %}
+  <label for 'content'>Content</label><br>
+  <textarea name = 'content'></textarea><br><br>
+  Add an image to your post
+  <input type="file" name="image" id="images" accept="image/*"><br><br>
+  <button>Submit</button>
+</form>
+{% endblock content %}

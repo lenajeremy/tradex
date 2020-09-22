@@ -1,0 +1,33 @@
+{% extends 'buyAndSell/layout.html' %}
+{% load static %}
+{% block title %}TradEx{% endblock title %}
+
+{% block content %}
+<h1>Welcome {{user.username}}</h1>
+<ul>
+<li>USERTYPE: {{ user.userType }}</li>
+<li>EMAIL: {{ user.email }}</li>
+{% if user.userType == 'buyer' %}
+  <h1>Your Cart {{len}}</h1>
+{% else %}
+  <h1>Your Products{{len}}</h1>
+{% endif %}
+{% for product in user.getProducts %}
+  <li>{{product}}</li>
+{% endfor %}
+</ul>
+<h1>Posts</h1>
+<a href = '{% url 'mainApp:create_new_post' %}'>Create a new post</a>
+<ul>
+{% for post in allPosts %}
+<li>
+  <p>Content: {{post.content}}</p>
+  <img src = '{% static post.image.url %}' alt = '' width = '200' height = '200' style = 'display: block'/>
+  Sent by <a href = ''>{{post.poster}}</a>
+</li>
+{% empty %}
+<li>No posts</li>
+{% endfor %}
+</ul>
+<a href = '{% url 'logout' %}'>Logout</a>
+{% endblock content %}
