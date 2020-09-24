@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'uqg0-1w&dv8o5frsp+hy_t)%b&)0jjz-#1m02$=s9woz#5kg#7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost']
 
@@ -73,8 +73,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'tradex.wsgi.application'
 
-# AUTH_USER_MODEL = 'buyAndSell.User'
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
@@ -117,6 +115,13 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
+# CORS SETTINGS
+
+CROSS_ORIGIN_ALLOW_ALL = True
+
+CROSS_ORIGIN_WHITELIST = ['http://localhost:3000', 'http://127.0.0.1:3000']
 
 
 # Static files (CSS, JavaScript, Images)

@@ -32,6 +32,7 @@ def new_product(request):
       return JsonResponse({'message': "Operation DisAllowed, User is not a seller", 'status': 403})
     else:  
       data_sent = json.loads(request.body)
+      print(data_sent)
       name = data_sent['name']
       description = data_sent['description']
       price = data_sent['price']
@@ -44,12 +45,12 @@ def new_product(request):
 
 def get_user(request, user_id):
   try:
-    return JsonResponse(get_object_or_404(User, id = user_id).serialize())
+    return JsonResponse({'user': get_object_or_404(User, id = user_id).serialize(), 'status': 200})
   except Http404 as e:
     return JsonResponse({'message': e.__str__(), 'status': 404})
 
 def get_all_users(request):
-  return JsonResponse({'users': [user.serialize() for user in User.objects.exclude(username = 'admin')]})
+  return JsonResponse({'users': [user.serialize() for user in User.objects.exclude(username = 'admin')], 'status': 200})
 
 def get_all_posts(request):
   return JsonResponse({'posts': [post.serialize() for post in Post.objects.all()]})
@@ -60,6 +61,22 @@ def get_post(request, post_id):
   except Http404 as e:
     return JsonResponse({'message': e.__str__(), 'status': 404})
 
+
+def get_all_products(request):
+  return JsonResponse({'allProducts': [product.serialize() for product in Product.objects.all()]})
+
+
+def perform_product_operation(request, product_id, operation, user_id):
+  try:
+    product = Product.objects.get(id = product_id)
+    if operation == 'add':
+      print(request.user)
+    else:
+      pass
+    return JsonResponse({'product': product.serialize()})
+  except Product.DoesNotExist:
+    return HttpResponse(f"Product with the id {product_id} does not exist")
+  
 def get_user_field(request, user_id, field):
   user = User.objects.get(id = user_id)
   if field.lower() == "posts":

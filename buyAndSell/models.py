@@ -52,7 +52,7 @@ class Cart(models.Model):
 class Post(models.Model):
   content = models.TextField()
   poster = models.ForeignKey(User, on_delete= models.CASCADE, related_name='posts')
-  image = models.ImageField()
+  image = models.TextField()
   dateCreated = models.DateTimeField(auto_now_add = True)
   
   def serialize(self):
@@ -75,7 +75,24 @@ class Account(models.Model):
     return f"NAME: {self.owner.first_name} {self.owner.last_name} NUMBER: {str(self.number)}"
   
 class Like(models.Model):
-  pass
+  post = models.ForeignKey(Post, on_delete = models.DO_NOTHING, related_name='likes')
+  liker = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'likes')
+  
+  def __str__(self):
+    return f"Like {len(self.post.likes.all())} on {self.post}"
+  
+  def serialize(self):
+    data_to_return = {'id': self.id, 'post_id': self.post.id, 'post_content_shortened': self.post.__str__()}
+    return data_to_return
 
 class Comment(models.Model):
-  pass
+  text = models.CharField(max_length = 300)
+  post = models.ForeignKey(Post, on_delete = models.CASCADE, related_name = 'comments')
+  commenter = models.ForeignKey(User, on_delete = models.DO_NOTHING, related_name = 'comments')
+  
+  def __str__(self):
+    return f"{self.text} {self.post}"
+  
+  def serialize(self):
+    data_to_return = {'id': self.id, 'post_id': self.post.id, 'commenter': self.commenter.__str__(), 'post_content_shortened': self.post.__str__()}
+    return data_to_return

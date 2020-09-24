@@ -16,6 +16,7 @@ hasher = PBKDF2PasswordHasher()
 def register(request):
   if request.method == "POST":
     data_sent = json.loads(request.body)
+    print(data_sent)
     username = data_sent['username']
     password = data_sent['password']
     first_name = data_sent['first_name']
@@ -42,7 +43,7 @@ def register(request):
         Account.objects.create(owner = testUser)
         login(request, testUser)
         
-        return JsonResponse({'message': 'You have successfully registered and is logged in already', 'status': 200})
+        return JsonResponse({'message': 'You have successfully registered and is logged in already', 'status': 200, 'id': testUser.id})
       
       except ValidationError as e:
         return JsonResponse({'message': 'There is an error in the registration process', 'status': 403, 'errors': e.messages})
@@ -65,7 +66,7 @@ def login_view(request):
     user = authenticate(request, username = username, password = password)
     if user is not None:
       login(request, user)
-      return JsonResponse({'message': "You have successfully logged in", 'status': 200})
+      return JsonResponse({'message': "You have successfully logged in", 'status': 200, 'id': user.id})
     else:
       return JsonResponse({'message': 'Invalid Login Credentials', "status": 403})
   
