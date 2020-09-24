@@ -2,7 +2,7 @@ import json
 from django.shortcuts import render, reverse, get_object_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect, Http404
 from django.contrib.auth import login, logout
-from .models import User, Post, Store, Product, Cart, Account
+from .models import User, Post, Store, Product, Cart, Account, Like
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
@@ -13,15 +13,20 @@ from django.views.decorators.csrf import csrf_exempt
 def index(request):
   return render(request, 'buyAndSell/index.html', context={'allPosts':Post.objects.all().order_by('-dateCreated'), 'len': len(request.user.getProducts())})
 
-@login_required
 @csrf_exempt
 def new_post(request):
   if request.method == 'POST':
     informationPosted = json.loads(request.body)
     content = informationPosted.get('content')
-    image = informationPosted.get('image')
-    Post.objects.create(content = content, poster = request.user, image = image)
-    return JsonResponse({'message': 'Your post has been successfully uploaded', 'status': 200})
+    image = informationPosted.get('imageUrl')
+    id = informationPosted.get('user_id')
+    try:
+      poster = get_object_or_404(User, id = id)
+      post = Post.objects.create(content = content, poster = poster, image = image)
+      post.save()
+    except Http404:
+      return JsonResponse({'message': 'You have to login', 'errors': ['You need to login to create posts'], 'status': 403})
+    return JsonResponse({'message': 'Your post has been successfully uploaded', 'status': 200, 'post_details': post.serialize()})
   
   return JsonResponse({'message': "Post request required", 'status': 403})
 
@@ -53,7 +58,7 @@ def get_all_users(request):
   return JsonResponse({'users': [user.serialize() for user in User.objects.exclude(username = 'admin')], 'status': 200})
 
 def get_all_posts(request):
-  return JsonResponse({'posts': [post.serialize() for post in Post.objects.all()]})
+  return JsonResponse({'posts': [post.serialize() for post in Post.objects.all().order_by('-dateCreated')]})
 
 def get_post(request, post_id):
   try:
@@ -65,7 +70,38 @@ def get_post(request, post_id):
 def get_all_products(request):
   return JsonResponse({'allProducts': [product.serialize() for product in Product.objects.all()]})
 
-
+def post_operation(request, operation, post_id):
+  if request.method == "PUT" or request.method == "POST":
+    
+    try:
+      post = get_object_or_404(Post, id = post_id)
+      if operation == 'like' and request.method == 'PUT':
+        
+        # do something
+          information_sent = json.loads(request.body)
+          liker = User.objects.get(id = information_sent['user_id'])
+          Like.objects.create(post = post, liker = liker)
+          return JsonResponse({'message': 'Like has been added', 'status': 200})
+        
+      elif operation == 'remove' and request.method == "PUT":
+        # do another thing
+        post.delete()
+        return JsonResponse({'message': "Post has been deleted", 'status': 200})
+      
+      elif operation == 'edit' and request.method == "PUT":
+        newText = information_sent['new_text']
+        post.content = newText
+        post.save()
+        
+      else:
+        return JsonResponse({'message': "Invalid operation", 'status': 403})
+      
+    except Http404:
+      return JsonResponse({'message': 'Post with that id not found', 'status': 404})
+    
+    # if there is a get request
+  return JsonResponse({'message': "POST or PUT request is required",'status': 403})
+  
 def perform_product_operation(request, product_id, operation, user_id):
   try:
     product = Product.objects.get(id = product_id)

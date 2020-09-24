@@ -56,7 +56,7 @@ class Post(models.Model):
   dateCreated = models.DateTimeField(auto_now_add = True)
   
   def serialize(self):
-    data_to_return = {'id': self.id, "content": self.content, "poster": self.poster.username, 'image': self.image.name, 'dateCreated': self.dateCreated.timestamp()}
+    data_to_return = {'id': self.id, "content": self.content, "poster": self.poster.username, 'image': self.image, 'dateCreated': self.dateCreated.timestamp(), 'number_of_likes': len(self.likes.all())}
     return data_to_return
     
   def __str__(self):

@@ -55,11 +55,12 @@ function registerUser(username, firstname, lastname, userType, password, email, 
 }
 
 
-function createNewPost(postContent, imageUrl, callback){
+function createNewPost(user_id, postContent, imageUrl, callback){
   fetch('http://localhost:8000/posts/new', {
     method: "POST",
     body: JSON.stringify(
       {
+        user_id: user_id,
         content: postContent,
         imageUrl: imageUrl
     })
@@ -69,11 +70,12 @@ function createNewPost(postContent, imageUrl, callback){
   .catch(err => console.log(err))
 }
 
-function createNewProduct(name, description, price, imageUrl, callback){
+function createNewProduct(user_id, name, description, price, imageUrl, callback){
   fetch('http://localhost:8000/posts/new', {
     method: "POST",
     body: JSON.stringify(
       {
+        user_id: user_id,
         name: name,
         description: description,
         price: price,
@@ -84,4 +86,29 @@ function createNewProduct(name, description, price, imageUrl, callback){
   .then(data => callback(data))
   .catch(err => console.log(err))
 }
-module.exports = {getUser, getAllUsers, getPost, getAllPosts, loginUser, registerUser, createNewPost, createNewProduct}
+
+function editPost(user_id, post_id, operation, newText, callback){
+  fetch(`http://localhost:8000/${post_id}/${operation}`,{
+    method: "PUT", 
+    body: JSON.stringify(
+      {
+        user_id: user_id,
+        newText: newText,
+        operation: operation 
+    })
+  })
+  .then(data => data.json())
+  .then(data => callback(data))
+  .catch(err => console.log(err))
+}
+module.exports = {
+  getUser,
+  getAllUsers, 
+  getPost, 
+  getAllPosts, 
+  loginUser, 
+  registerUser, 
+  createNewPost, 
+  createNewProduct, 
+  editPost
+}
