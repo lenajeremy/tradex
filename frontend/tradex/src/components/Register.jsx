@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import InputField from './InputField';
 import { registerUser } from '../fetch';
+import {Redirect } from 'react-router-dom';
 
 
 class Register extends Component {
@@ -36,7 +37,9 @@ class Register extends Component {
   }
   render() {
     let displayError = this.state.errorMessages.map((message, index) => <p key={index} className='text-danger'>{message}</p>)
-
+    if(this.state.id){
+      return <Redirect to = '/' />
+    }
     return (
       <React.Fragment>
         {/* Map through the error messages for any error and display the error*/}

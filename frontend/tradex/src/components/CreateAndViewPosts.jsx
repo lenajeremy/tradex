@@ -3,10 +3,6 @@ import * as fetch from '../fetch';
 import InputField from './InputField';
 import Post from './Post';
 
-
-
-
-
 class CreatePost extends Component {
   constructor(props) {
     super(props);
@@ -38,7 +34,7 @@ class CreatePost extends Component {
           <InputField
             type='textarea'
             name='postContent'
-            placeholderMessage={`What's happening today${this.props.userDetails.username ? ` ${this.props.userDetails.username}` : ''}??`}
+            placeholderMessage={`What's happening today${this.props.userDetails.firstName ? ` ${this.props.userDetails.firstName}` : ''}??`}
             changeParentState={(state, name) => this.setState({ [name]: state })}
           />
           <br />
@@ -56,14 +52,24 @@ class CreatePost extends Component {
 
 
 class AllPosts extends React.Component {
-  constructor(props) {
+  
+  constructor(props){
     super(props);
+    this.state = {posts: this.props.posts}
+    this.updatePost = this.updatePost.bind(this)
   }
-
+  updatePost(id, numberofLikes){
+    this.props.updateParent(id, numberofLikes);
+  }
   render() {
     return (
       <div className="posts">
-        {this.props.posts.map((post, index) => <Post key={index} postDetails = {post} />)}
+        {this.state.posts.map((post, index) => 
+        <Post 
+          user_id = {this.props.user_id} 
+          key={index} postDetails={post} 
+          postLike ={this.updatePost}
+        />)}
       </div>
     )
   }

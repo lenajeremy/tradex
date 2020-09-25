@@ -56,7 +56,7 @@ class Post(models.Model):
   dateCreated = models.DateTimeField(auto_now_add = True)
   
   def serialize(self):
-    data_to_return = {'id': self.id, "content": self.content, "poster": self.poster.username, 'image': self.image, 'dateCreated': self.dateCreated.timestamp(), 'number_of_likes': len(self.likes.all())}
+    data_to_return = {'id': self.id, "content": self.content, "poster": self.poster.username, 'image': self.image, 'dateCreated': self.dateCreated.timestamp(), 'number_of_likes': len(self.likes.all()), 'likers': [like.liker.id for like in self.likes.all()]}
     return data_to_return
     
   def __str__(self):
@@ -82,7 +82,7 @@ class Like(models.Model):
     return f"Like {len(self.post.likes.all())} on {self.post}"
   
   def serialize(self):
-    data_to_return = {'id': self.id, 'post_id': self.post.id, 'post_content_shortened': self.post.__str__()}
+    data_to_return = {'id': self.id, 'post_id': self.post.id, 'liker_id': self.liker.id, 'post_content_shortened': self.post.__str__()}
     return data_to_return
 
 class Comment(models.Model):

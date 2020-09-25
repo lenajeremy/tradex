@@ -8,7 +8,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
-
 @login_required
 def index(request):
   return render(request, 'buyAndSell/index.html', context={'allPosts':Post.objects.all().order_by('-dateCreated'), 'len': len(request.user.getProducts())})
@@ -70,25 +69,29 @@ def get_post(request, post_id):
 def get_all_products(request):
   return JsonResponse({'allProducts': [product.serialize() for product in Product.objects.all()]})
 
+@csrf_exempt
 def post_operation(request, operation, post_id):
-  if request.method == "PUT" or request.method == "POST":
-    
+  
+  if request.method == "PUT":
     try:
       post = get_object_or_404(Post, id = post_id)
-      if operation == 'like' and request.method == 'PUT':
-        
-        # do something
-          information_sent = json.loads(request.body)
-          liker = User.objects.get(id = information_sent['user_id'])
+      if operation == 'like':
+        information_sent = json.loads(request.body)
+        liker = User.objects.get(id = information_sent['user_id'])
+        if len(Like.objects.filter(post = post, liker = liker)) == 0:
           Like.objects.create(post = post, liker = liker)
-          return JsonResponse({'message': 'Like has been added', 'status': 200})
-        
-      elif operation == 'remove' and request.method == "PUT":
+        else:
+          like = Like.objects.get(post = post, liker = liker)
+          like.delete()
+          
+        return JsonResponse({'message': 'Operation has been carried out', 'newLikeCount': len(Like.objects.filter(post = post)), 'status': 200})
+      
+      elif operation == 'remove':
         # do another thing
         post.delete()
         return JsonResponse({'message': "Post has been deleted", 'status': 200})
       
-      elif operation == 'edit' and request.method == "PUT":
+      elif operation == 'edit':
         newText = information_sent['new_text']
         post.content = newText
         post.save()

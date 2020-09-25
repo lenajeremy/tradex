@@ -88,13 +88,14 @@ function createNewProduct(user_id, name, description, price, imageUrl, callback)
 }
 
 function editPost(user_id, post_id, operation, newText, callback){
-  fetch(`http://localhost:8000/${post_id}/${operation}`,{
+  fetch(`http://localhost:8000/post/${post_id}/${operation}`,{
     method: "PUT", 
     body: JSON.stringify(
       {
         user_id: user_id,
         newText: newText,
-        operation: operation 
+        operation: operation,
+        post_id: post_id
     })
   })
   .then(data => data.json())
