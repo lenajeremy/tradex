@@ -1,0 +1,30 @@
+:root{
+  --mainColor: brown;
+}
+.sideBar {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  height: 100vh;
+  width: 24%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sidebar__main {
+  height: 80%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.sidebar__links {
+  font-size: 1.4rem;
+  color: var(--mainColor);
+}
+.sidebar__links a {
+  color: inherit;
+  text-decoration: none;
+}
+

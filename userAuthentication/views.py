@@ -24,11 +24,12 @@ def register(request):
     conf_password = data_sent['conf_password']
     user_type = data_sent['user_type']
     email = data_sent['email']
+    paypayEmail = data_sent['paypalEmail']
     
     if password != '' and password == conf_password:
       hashedPassword = hasher.encode(password=password, salt=hasher.salt())
       # Create a testuser and save the user in memory
-      testUser = User(username = username, password = hashedPassword, first_name= first_name, last_name = last_name, userType=user_type, email = email)
+      testUser = User(username = username, password = hashedPassword, first_name= first_name, last_name = last_name, userType=user_type, email = email, paypal_email_address = paypayEmail)
       try:
         validate_password(password, testUser)
         # if the password validation is successful, save the user to the database and then redirect to the index route

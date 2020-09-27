@@ -13,22 +13,31 @@ class CreatePost extends Component {
   handleFormSubmission(event) {
     event.preventDefault();
     let user_id = this.props.userDetails.id;
-    fetch.createNewPost(user_id, this.state.postContent, this.state.postImage, data => {
-      if (data.status !== 200) {
-        // set the state of error to true
-        this.setState({ isError: true, errors: data.errors, isSuccess: false });
-      } else {
-        this.props.getNewPost(data.post_details)
-        this.setState({ postContent: '', postImage: '', isSuccess: true, isError: false });
-      }
-    })
+    if(this.state.postContent === ''){
+      this.setState({errors: ['Please add something and try again!'], isError: true, isSuccess: false});
+    }else{
+      fetch.createNewPost(user_id, this.state.postContent, this.state.postImage, data => {
+        if (data.status !== 200) {
+          // set the state of error to true
+          this.setState({ isError: true, errors: data.errors, isSuccess: false });
+        } else {
+          this.props.getNewPost(data.post_details)
+          this.setState({ postContent: '', postImage: '', isSuccess: true, isError: false });
+        }
+      })
+    }
   }
 
   render() {
+    let styles = {
+      borderRadius: 10,
+      boxShadow: "-2px 2px 5px gray",
+      padding: 20
+    }
     let displayError = this.state.isError ? <p className='text-danger text-center'>{this.state.errors[0]}</p> : '';
     let displaySuccess = this.state.isSuccess ? <p className='text-success text-center'>Your post has successfully been created</p> : '';
     return (
-      <div className="newPost">
+      <div className="newPost" style ={styles}>
         <h4 className='text-center'>Create New Post</h4>
         <form onSubmit={this.handleFormSubmission}>
           <InputField
@@ -41,7 +50,7 @@ class CreatePost extends Component {
           <label className='text-secondary'>Text ain't enough?? Add an image!</label>
           <input type='file' accept='image/*' className='form-control' onChange={e => this.setState({ postImage: e.target.value })} />
           <br />
-          <button type="submit" className='btn btn-success'>Submit</button>
+          <button type="submit" className='btn btn-success btn-block'>Post</button>
         </form>
         {displayError}
         {displaySuccess}

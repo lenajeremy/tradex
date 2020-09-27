@@ -57,7 +57,18 @@ def get_all_users(request):
   return JsonResponse({'users': [user.serialize() for user in User.objects.exclude(username = 'admin')], 'status': 200})
 
 def get_all_posts(request):
-  return JsonResponse({'posts': [post.serialize() for post in Post.objects.all().order_by('-dateCreated')]})
+  start = Post.objects.count() - int(request.GET.get('start'))
+  end = Post.objects.count() - int(request.GET.get('end'))
+  print(start, end)
+  valid_posts = []
+  
+  for post in Post.objects.order_by('-dateCreated'):
+    if post.test(start, end):
+      valid_posts.append(post)
+      
+  print(valid_posts)
+      
+  return JsonResponse({'posts': [post.serialize() for post in valid_posts]})
 
 def get_post(request, post_id):
   try:
@@ -78,13 +89,13 @@ def post_operation(request, operation, post_id):
       if operation == 'like':
         information_sent = json.loads(request.body)
         liker = User.objects.get(id = information_sent['user_id'])
-        if len(Like.objects.filter(post = post, liker = liker)) == 0:
+        if Like.objects.filter(post = post, liker = liker).count() == 0:
           Like.objects.create(post = post, liker = liker)
         else:
           like = Like.objects.get(post = post, liker = liker)
           like.delete()
           
-        return JsonResponse({'message': 'Operation has been carried out', 'newLikeCount': len(Like.objects.filter(post = post)), 'status': 200})
+        return JsonResponse({'message': 'Operation has been carried out', 'newLikeCount': Like.objects.filter(post = post).count(), 'status': 200})
       
       elif operation == 'remove':
         # do another thing

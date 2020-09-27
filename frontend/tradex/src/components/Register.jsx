@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import InputField from './InputField';
 import { registerUser } from '../fetch';
-import {Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 
 class Register extends Component {
@@ -25,7 +25,7 @@ class Register extends Component {
     event.preventDefault();
     registerUser(this.state.userName, this.state.firstName,
       this.state.lastName, this.state.userType, this.state.password,
-      this.state.email, this.state.conf_password, data => {
+      this.state.email, this.state.paypalEmail, this.state.conf_password, data => {
         if (data.status !== 200) {
           // do some stuff eg. display an error message
           this.setState({ errorMessages: data.errors })
@@ -37,13 +37,13 @@ class Register extends Component {
   }
   render() {
     let displayError = this.state.errorMessages.map((message, index) => <p key={index} className='text-danger'>{message}</p>)
-    if(this.state.id){
-      return <Redirect to = '/' />
+    if (this.state.id) {
+      return <Redirect to='/' />
     }
     return (
       <React.Fragment>
         {/* Map through the error messages for any error and display the error*/}
-
+        <h4 className='text-center'>Create an Account</h4>
         {displayError}
 
         <form onSubmit={this.handleFormSubmission}>
@@ -57,21 +57,26 @@ class Register extends Component {
           </div>
           <InputField inputType='text' placeholderMessage='Choose a username' name='userName' changeParentState={(state, name) => this.setState({ [name]: state })} />
 
-
-          <InputField inputType='radio' name='userType' value='seller' changeParentState={(state, name) => this.setState({ [name]: state })} />
-          <label>I'm a seller</label><br />
-
-          <InputField inputType='radio' name='userType' value='buyer' changeParentState={(state, name) => this.setState({ [name]: state })} />
-          <label>I'm a buyer</label><br />
-
+          <div className="row my-2">
+            <div className="col-6 text-center">
+            <InputField inputType='radio' name='userType' value='seller' changeParentState={(state, name) => this.setState({ [name]: state })} />
+            <label>I'm a seller</label><br />
+            </div>
+            <div className="col-6 text-center">
+            <InputField inputType='radio' name='userType' value='buyer' changeParentState={(state, name) => this.setState({ [name]: state })} />
+            <label>I'm a buyer</label><br />
+            </div>
+          </div>
 
           <InputField inputType='email' placeholderMessage='Enter your email' name='email' changeParentState={(state, name) => this.setState({ [name]: state })} />
+
+          <InputField inputType='email' placeholderMessage='Enter your paypal email' name='paypalEmail' changeParentState={(state, name) => this.setState({ [name]: state })} />
 
           <InputField inputType='password' placeholderMessage='Enter your password' name='password' changeParentState={(state, name) => this.setState({ [name]: state })} />
 
           <InputField inputType='password' placeholderMessage='Confirm your password' name='conf_password' changeParentState={(state, name) => this.setState({ [name]: state })} />
           <br />
-          <input type='submit' className='btn btn-primary mx-auto d-block btn-lg' />
+          <input type='submit' className='btn btn-primary btn-block' />
         </form>
       </React.Fragment>
     );

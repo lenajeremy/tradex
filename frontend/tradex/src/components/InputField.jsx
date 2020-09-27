@@ -22,6 +22,7 @@ class InputField extends Component {
           name = {this.props.name}
           onChange = {this.handleChange}
           placeholder = {this.props.placeholderMessage}
+          rows='3'
         />
       )
     }

@@ -41,14 +41,13 @@ class Login extends Component {
       return (
         <React.Fragment>
           {/* Map through the error messages for any error and display the error*/}
-
+          <h4 className= 'text-center mb-4'>Login</h4>
           {displayError()}
-
           <form onSubmit={this.handleFormSubmission}>
             <InputField inputType='text' placeholderMessage='Enter your username' name='username' changeParentState={(state, name) => this.setState({ [name]: state })} /><br />
             <InputField inputType='password' placeholderMessage='Enter your password' name='password' changeParentState={(state, name) => this.setState({ [name]: state })} />
             <br />
-            <input type='submit' className='btn btn-primary mx-auto d-block btn-lg' />
+            <input type='submit' className='btn btn-primary btn-block' />
           </form>
         </React.Fragment>
       )

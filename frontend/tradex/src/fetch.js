@@ -18,8 +18,8 @@ function getPost(post_id, callback){
   .catch(err => console.log(err))
 }
 
-function getAllPosts(callback){
-  fetch('http://localhost:8000/posts/all')
+function getAllPosts(start, callback){
+  fetch(`http://localhost:8000/posts/all?start=${start}&end=${start+5}`)
   .then(data => data.json())
   .then(data => callback(data))
   .catch(err => console.log(err))
@@ -36,7 +36,7 @@ function loginUser(username, password, callback){
   .then(data => callback(data))
   .catch(err => console.log(err))
 }
-function registerUser(username, firstname, lastname, userType, password, email, conf_password, callback){
+function registerUser(username, firstname, lastname, userType, password, email, paypalEmail,  conf_password, callback){
   fetch('http://localhost:8000/accounts/register/', {
     method: "POST",
     body: JSON.stringify({
@@ -44,6 +44,7 @@ function registerUser(username, firstname, lastname, userType, password, email, 
       first_name: firstname,
       last_name: lastname, 
       email: email,
+      paypalEmail: paypalEmail,
       user_type: userType,
       password: password,
       conf_password: conf_password
@@ -102,6 +103,10 @@ function editPost(user_id, post_id, operation, newText, callback){
   .then(data => callback(data))
   .catch(err => console.log(err))
 }
+function getStore(owner_id, callback){
+  callback(JSON.parse({value: "Store", null: false}))
+}
+
 module.exports = {
   getUser,
   getAllUsers, 
@@ -111,5 +116,6 @@ module.exports = {
   registerUser, 
   createNewPost, 
   createNewProduct, 
-  editPost
+  editPost,
+  getStore
 }

@@ -56,8 +56,12 @@ class Post(models.Model):
   dateCreated = models.DateTimeField(auto_now_add = True)
   
   def serialize(self):
-    data_to_return = {'id': self.id, "content": self.content, "poster": self.poster.username, 'image': self.image, 'dateCreated': self.dateCreated.timestamp(), 'number_of_likes': len(self.likes.all()), 'likers': [like.liker.id for like in self.likes.all()]}
+    data_to_return = {'id': self.id, "content": self.content, "poster": self.poster.username, 'image': self.image, 'dateCreated': self.dateCreated.timestamp(), 'number_of_likes': len(self.likes.all())}
     return data_to_return
+  
+  def test(self, start, end):
+    if self.id <= start and self.id >= end:
+      return self
     
   def __str__(self):
       return f"{self.content[:25]}..."

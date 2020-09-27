@@ -10,6 +10,7 @@ class User(AbstractUser):
   )
   userType = models.CharField(choices=USERTYPE_CHOICES, default='buyer', max_length=9)
   profile_picture = models.TextField()
+  paypal_email_address = models.EmailField()
   
   def getProducts(self):
     if self.userType == 'buyer':
@@ -17,7 +18,7 @@ class User(AbstractUser):
     return self.store.get().products.all()
 
   def serialize(self):
-    data_to_return = {'id': self.id, 'userName': self.username, 'firstName': self.first_name, 'lastName': self.last_name, 'profilePicture': self.profile_picture, 'postsMade': [post.serialize() for post in self.posts.all()], 'userType': self.userType, 'accountDetails': self.account.get().serialize()}
+    data_to_return = {'id': self.id, 'userName': self.username, 'firstName': self.first_name, 'lastName': self.last_name, 'profilePicture': self.profile_picture, 'postsMade': [post.serialize() for post in self.posts.all()], 'userType': self.userType, 'accountDetails': self.account.get().serialize(), 'emailAddress': self.email, 'paypalEmail': self.paypal_email_address}
     if self.userType == 'buyer':
       data_to_return['cart'] = self.cart.get().serialize()
     else:
