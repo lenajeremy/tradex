@@ -32,6 +32,12 @@ class Login extends Component {
   }
 
   render() {
+    let styles = {
+      borderRadius: 10,
+      boxShadow: "-2px 2px 5px gray",
+      padding: 20
+    };
+
     let displayError = () => {
       if (this.state.errorMessage) {
         return <p className='text-danger'>{this.state.errorMessage}</p>
@@ -39,7 +45,7 @@ class Login extends Component {
     }
     if (!this.state.toRedirect) {
       return (
-        <React.Fragment>
+        <div className = 'login' style={styles}>
           {/* Map through the error messages for any error and display the error*/}
           <h4 className= 'text-center mb-4'>Login</h4>
           {displayError()}
@@ -47,9 +53,9 @@ class Login extends Component {
             <InputField inputType='text' placeholderMessage='Enter your username' name='username' changeParentState={(state, name) => this.setState({ [name]: state })} /><br />
             <InputField inputType='password' placeholderMessage='Enter your password' name='password' changeParentState={(state, name) => this.setState({ [name]: state })} />
             <br />
-            <input type='submit' className='btn btn-primary btn-block' />
+            <input type='submit' className='btn btn-primary btn-block' value = 'Login'/>
           </form>
-        </React.Fragment>
+        </div>
       )
     }
     return <Redirect to='/'/>

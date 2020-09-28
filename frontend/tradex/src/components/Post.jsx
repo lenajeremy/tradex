@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { editPost } from '../fetch';
-import HeadsetMic from '@material-ui/icons/HeadsetMicSharp'
 import ThumbUp from '@material-ui/icons/ThumbUpAlt'
 
 class Post extends Component {
@@ -34,13 +33,11 @@ class Post extends Component {
       background: 'transparent'
     }
     return (
-      <div className="card my-2" style = {styles}>
+      <div className="card my-4" style = {styles}>
         <div className="card-body">
           <small>{this.props.postDetails.poster}</small>
           <p>{this.props.postDetails.content}</p>
-    <p>{this.props.postDetails.id}</p>
-          <a href='' onClick={this.handleLike}>like</a>
-          <h5><ThumbUp /> {this.props.postDetails.number_of_likes}</h5>
+          <h5><a href='' onClick={this.handleLike}><ThumbUp /></a>{this.props.postDetails.number_of_likes}</h5>
         </div>
       </div>
     );

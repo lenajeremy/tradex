@@ -36,12 +36,19 @@ class Register extends Component {
       });
   }
   render() {
-    let displayError = this.state.errorMessages.map((message, index) => <p key={index} className='text-danger'>{message}</p>)
+
+    let styles = {
+      borderRadius: 10,
+      boxShadow: "-2px 2px 5px gray",
+      padding: 20
+    };
+
+    let displayError = this.state.errorMessages.map((message, index) => <p key={index} className='text-danger small text-center'>{message}</p>)
     if (this.state.id) {
       return <Redirect to='/' />
     }
     return (
-      <React.Fragment>
+      <div className='register' style ={styles}>
         {/* Map through the error messages for any error and display the error*/}
         <h4 className='text-center'>Create an Account</h4>
         {displayError}
@@ -76,9 +83,9 @@ class Register extends Component {
 
           <InputField inputType='password' placeholderMessage='Confirm your password' name='conf_password' changeParentState={(state, name) => this.setState({ [name]: state })} />
           <br />
-          <input type='submit' className='btn btn-primary btn-block' />
+          <input type='submit' className='btn btn-primary btn-block' value = 'Register'/>
         </form>
-      </React.Fragment>
+      </div>
     );
   }
 }

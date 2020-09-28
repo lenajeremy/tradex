@@ -24,6 +24,13 @@ function getAllPosts(start, callback){
   .then(data => callback(data))
   .catch(err => console.log(err))
 }
+function getAllProducts(user_id, start, callback){
+  fetch(`http://localhost:8000/products/all?start=${start}&end=${start+5}`)
+  .then(data => data.json())
+  .then(data => callback(data))
+  .catch(error => console.log(error))
+}
+
 function loginUser(username, password, callback){
   fetch('http://localhost:8000/accounts/login/', {
     method: "POST",
@@ -103,9 +110,13 @@ function editPost(user_id, post_id, operation, newText, callback){
   .then(data => callback(data))
   .catch(err => console.log(err))
 }
+
+// I don't remember why i wrote this function.... 
+//But i think it does something... I hope I figure it out soon
 function getStore(owner_id, callback){
   callback(JSON.parse({value: "Store", null: false}))
 }
+// The reason for the writin of the getStore function still remains unknown
 
 module.exports = {
   getUser,

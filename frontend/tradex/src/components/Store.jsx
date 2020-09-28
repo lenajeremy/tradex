@@ -1,22 +1,27 @@
 import React, { Component } from 'react';
 import * as fetch from '../fetch';
+import Product from './Product';
 
 class Store extends Component {
   constructor(props) {
     super(props);
-    this.state = {  }
+    this.state = {}
   }
 
-  componentDidMount(){
-    // fetch.getStore(1, data => {
-    //   console.log(data);
-    // })
-  }
-  render() { 
+  render() {
     return (
-      <p>Store</p>
+      <React.Fragment>
+        <p>Store</p>
+        <Product />
+        <Product />
+        <Product />
+        <Product />
+        <Product />
+        <Product />
+        <Product />
+      </React.Fragment>
     );
   }
 }
- 
+
 export default Store;

@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
-from userAuthentication.models import User
+from userAuthentication.models import User, User_profile
 import random, json
 
 # Create your models here.

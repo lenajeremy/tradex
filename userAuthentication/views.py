@@ -6,6 +6,7 @@ from django.db import IntegrityError
 from .models import User
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
 from buyAndSell.models import Store, Account, Cart
+from .models import User_profile
 from django.views.decorators.csrf import csrf_exempt
 import json
 
@@ -40,7 +41,8 @@ def register(request):
           Store.objects.create(user = testUser)
         else:
           Cart.objects.create(user = testUser)
-          
+        
+        User_profile.objects.create(user = testUser)
         Account.objects.create(owner = testUser)
         login(request, testUser)
         

@@ -9,8 +9,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { CreatePost, AllPosts } from "./components/CreateAndViewPosts";
 import Cart from "./components/Cart";
 import Store from "./components/Store";
-import SearchIcon from "@material-ui/icons/Search";
-import SideBar from './components/SideBar'
+import SideBar from "./components/SideBar";
 
 class App extends React.Component {
   constructor(props) {
@@ -26,13 +25,13 @@ class App extends React.Component {
 
   componentDidMount() {
     fetch.getAllPosts(0, (posts) => {
-      console.log(posts)
-      this.setState({ posts: posts.posts })
+      console.log(posts);
+      this.setState({ posts: posts.posts });
     });
     window.addEventListener("scroll", this.infiniteScroll);
   }
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.infiniteScroll)
+    window.removeEventListener("scroll", this.infiniteScroll);
   }
 
   changePost(id, newLikeCount) {
@@ -45,15 +44,13 @@ class App extends React.Component {
   }
 
   infiniteScroll() {
-    if(window.scrollY + window.innerHeight >= document.body.offsetHeight){
-      fetch.getAllPosts(this.state.posts.length ,(posts) => {
-        this.setState({ posts: [...this.state.posts, ...posts.posts] })
+    if (window.scrollY + window.innerHeight >= document.body.offsetHeight) {
+      fetch.getAllPosts(this.state.posts.length, (posts) => {
+        this.setState({ posts: [...this.state.posts, ...posts.posts] });
       });
     }
-}
+  }
   handleNewPosts(postDetails) {
-    console.log(postDetails)
-    console.log(postDetails)
     this.setState({ posts: [postDetails, ...this.state.posts] });
   }
 
@@ -71,17 +68,18 @@ class App extends React.Component {
     return (
       <Router>
         <Header userDetails={this.state.userDetails} />
+        <SideBar userDetails={this.state.userDetails} />
         <div className="container">
           <hr />
           <Route
-            path="/" exact
+            path="/"
+            exact
             component={() => (
               <React.Fragment>
                 <CreatePost
                   userDetails={this.state.userDetails}
                   getNewPost={this.handleNewPosts}
                 />
-                <SideBar />
                 <hr />
                 <AllPosts
                   user_id={this.state.id}
@@ -91,7 +89,7 @@ class App extends React.Component {
               </React.Fragment>
             )}
           />
-          <div className="container mt-5">
+          <div className="container-fluid mt-5">
             <Route
               path="/login"
               component={() => (
@@ -114,7 +112,6 @@ class App extends React.Component {
             />
           </div>
         </div>
-        <SearchIcon />
       </Router>
     );
   }

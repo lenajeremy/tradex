@@ -7,8 +7,8 @@ function Header(props) {
   return (
     <header>
       <nav className='navbar navbar-expand-sm'>
-        <div className="container">
-          <Link to='/' className='navbar-brand'>TradEX</Link>
+        <div className="container header">
+          <Link to='/' className='navbar-brand'>TradeX</Link>
           <ul className="navbar-nav ml-auto">
             <li className='nav-item'><Link to='/' className='nav-link'>Home</Link></li>
             <li className='nav-item'><Link to='/login' className='nav-link'>Sign In</Link></li>
