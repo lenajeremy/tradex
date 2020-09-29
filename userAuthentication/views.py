@@ -17,7 +17,6 @@ hasher = PBKDF2PasswordHasher()
 def register(request):
   if request.method == "POST":
     data_sent = json.loads(request.body)
-    print(data_sent)
     username = data_sent['username']
     password = data_sent['password']
     first_name = data_sent['first_name']
@@ -61,6 +60,7 @@ def register(request):
 
 @csrf_exempt
 def login_view(request):
+  print(request.FILES)
   if request.method == 'POST':
     data_sent = json.loads(request.body)
     username = data_sent['username']

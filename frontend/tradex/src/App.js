@@ -10,12 +10,14 @@ import { CreatePost, AllPosts } from "./components/CreateAndViewPosts";
 import Cart from "./components/Cart";
 import Store from "./components/Store";
 import SideBar from "./components/SideBar";
+import UserProfile from "./components/UserProfile";
+import {CookieProvider} from 'react-cookie';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userDetails: { userName: "", userType: "No user logged in" },
+      userDetails: { userName: "", userType: "No user logged in" , profile: {}},
       posts: [{ content: "Loading posts", postImage: null }],
     };
     this.handleNewPosts = this.handleNewPosts.bind(this);
@@ -25,13 +27,8 @@ class App extends React.Component {
 
   componentDidMount() {
     fetch.getAllPosts(0, (posts) => {
-      console.log(posts);
       this.setState({ posts: posts.posts });
     });
-    window.addEventListener("scroll", this.infiniteScroll);
-  }
-  componentWillUnmount() {
-    window.removeEventListener("scroll", this.infiniteScroll);
   }
 
   changePost(id, newLikeCount) {
@@ -85,6 +82,7 @@ class App extends React.Component {
                   user_id={this.state.id}
                   posts={this.state.posts}
                   updateParent={this.changePost}
+                  makeInfiniteScroll = {this.infiniteScroll}
                 />
               </React.Fragment>
             )}
@@ -109,6 +107,10 @@ class App extends React.Component {
             <Route
               path="/user/store"
               component={() => <Store owner_id={this.state.userDetails.id} />}
+            />
+            <Route 
+              path = '/user/profile'
+              component = {() => <UserProfile userDetails = {this.state.userDetails}/>}
             />
           </div>
         </div>

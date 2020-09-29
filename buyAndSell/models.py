@@ -18,9 +18,9 @@ class Store(models.Model):
 
 class Product(models.Model):
   name = models.CharField(max_length=100)
-  description = models.TextField()
+  description = models.CharField(max_length=200)
   price = models.IntegerField()
-  imageUrl = models.TextField()
+  imageUrl = models.ImageField(upload_to = 'product_images')
   watchers = models.ManyToManyField(User, related_name='watched_products')
   store = models.ForeignKey(Store, on_delete = models.CASCADE, related_name = 'products')
   isAvailable = models.BooleanField(default = False)
@@ -30,7 +30,7 @@ class Product(models.Model):
     return self.store.user
   
   def serialize(self):
-    data_to_return = {'id': self.id, 'name': self.name, 'description': self.description, 'price': self.price, 'imageUrl': self.imageUrl, 'store': self.store, 'isAvailable': self.isAvailable, 'dateAdded': self.dataAdded.timestamp, 'owner': {'id': self.getOwner().id, 'username': self.getOwner().username}}
+    data_to_return = {'id': self.id, 'name': self.name, 'description': self.description, 'price': self.price, 'imageUrl': self.imageUrl.url, 'store': self.store, 'isAvailable': self.isAvailable, 'dateAdded': self.dataAdded.timestamp, 'owner': {'id': self.getOwner().id, 'username': self.getOwner().username}}
     return data_to_return
   
   
@@ -52,11 +52,11 @@ class Cart(models.Model):
 class Post(models.Model):
   content = models.TextField()
   poster = models.ForeignKey(User, on_delete= models.CASCADE, related_name='posts')
-  image = models.TextField()
+  image = models.ImageField(upload_to = 'post_images')
   dateCreated = models.DateTimeField(auto_now_add = True)
   
   def serialize(self):
-    data_to_return = {'id': self.id, "content": self.content, "poster": self.poster.username, 'image': self.image, 'dateCreated': self.dateCreated.timestamp(), 'number_of_likes': len(self.likes.all())}
+    data_to_return = {'id': self.id, "content": self.content, "poster": self.poster.username, 'image': "image" or self.image.url, 'dateCreated': self.dateCreated.timestamp(), 'number_of_likes': len(self.likes.all())}
     return data_to_return
   
   def test(self, start, end):

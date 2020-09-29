@@ -13,10 +13,13 @@ class CreatePost extends Component {
   handleFormSubmission(event) {
     event.preventDefault();
     let user_id = this.props.userDetails.id;
+    let formData = new FormData();
+    formData.append('image__file', this.state.postImage)
+    console.log(event.target.elements.post_image.files[0])
     if(this.state.postContent === ''){
       this.setState({errors: ['Please add something and try again!'], isError: true, isSuccess: false});
     }else{
-      fetch.createNewPost(user_id, this.state.postContent, this.state.postImage, data => {
+      fetch.createNewPost(user_id, this.state.postContent, formData, data => {
         if (data.status !== 200) {
           // set the state of error to true
           this.setState({ isError: true, errors: data.errors, isSuccess: false });
@@ -48,7 +51,7 @@ class CreatePost extends Component {
           />
           <br />
           <label className='text-secondary'>Text ain't enough?? Add an image!</label>
-          <input type='file' accept='image/*' className='form-control' onChange={e => this.setState({ postImage: e.target.value })} />
+          <input name = 'post_image' type='file' accept='image/*' className='form-control' onChange={e => this.setState({ postImage: e.target.files[0] })} />
           <br />
           <button type="submit" className='btn btn-success btn-block'>Post</button>
         </form>
@@ -67,6 +70,12 @@ class AllPosts extends React.Component {
     this.state = {posts: this.props.posts}
     this.updatePost = this.updatePost.bind(this)
   }
+  componentDidMount(){
+    window.addEventListener("scroll", this.props.makeInfiniteScroll);
+  }
+ componentWillUnmount() {
+  window.removeEventListener("scroll", this.props.makeInfiniteScroll);
+ }
   updatePost(id, numberofLikes){
     this.props.updateParent(id, numberofLikes);
   }

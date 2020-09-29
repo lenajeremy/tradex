@@ -19,6 +19,8 @@ def new_post(request):
     content = informationPosted.get('content')
     image = informationPosted.get('imageUrl')
     id = informationPosted.get('user_id')
+    print(informationPosted)
+    print(request.FILES)
     try:
       poster = get_object_or_404(User, id = id)
       post = Post.objects.create(content = content, poster = poster, image = image)

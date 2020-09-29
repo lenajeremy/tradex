@@ -9,9 +9,8 @@ class User(AbstractUser):
     ('seller', 'Seller')
   )
   userType = models.CharField(choices=USERTYPE_CHOICES, default='buyer', max_length=9)
-  profile_picture = models.TextField()
+  profile_picture = models.ImageField(blank = True, upload_to = 'profile_images')
   paypal_email_address = models.EmailField()
-  # followers = models.ManyToManyField(User, related_name='followed')
   
   def getProducts(self):
     if self.userType == 'buyer':
@@ -19,7 +18,7 @@ class User(AbstractUser):
     return self.store.get().products.all()
 
   def serialize(self):
-    data_to_return = {'id': self.id, 'userName': self.username, 'firstName': self.first_name, 'lastName': self.last_name, 'profilePicture': self.profile_picture, 'postsMade': [post.serialize() for post in self.posts.all()], 'userType': self.userType, 'accountDetails': self.account.get().serialize(), 'emailAddress': self.email, 'paypalEmail': self.paypal_email_address, 'profile': self.profile.serialize()}
+    data_to_return = {'id': self.id, 'userName': self.username, 'firstName': self.first_name, 'lastName': self.last_name, 'profilePicture': self.profile_picture.name, 'postsMade': [post.serialize() for post in self.posts.all()], 'userType': self.userType, 'accountDetails': self.account.get().serialize(), 'emailAddress': self.email, 'paypalEmail': self.paypal_email_address, 'profile': self.profile.get().serialize()}
     if self.userType == 'buyer':
       data_to_return['cart'] = self.cart.get().serialize()
     else:
@@ -33,7 +32,7 @@ class User(AbstractUser):
 
 class User_profile(models.Model):
   user = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'profile')
-  bio = models.TextField(default='I love myself')
+  bio = models.CharField(max_length = 200, default='About Me')
   status = models.CharField(max_length = 60, default = 'Currently Available')
   
   def __str__(self):
