@@ -5,6 +5,7 @@ from django.contrib.auth import login, logout
 from .models import User, Post, Store, Product, Cart, Account, Like
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+import os
 
 
 # Create your views here.
@@ -13,14 +14,16 @@ def index(request):
   return render(request, 'buyAndSell/index.html', context={'allPosts':Post.objects.all().order_by('-dateCreated'), 'len': len(request.user.getProducts())})
 
 @csrf_exempt
+
 def new_post(request):
   if request.method == 'POST':
-    informationPosted = json.loads(request.body)
-    content = informationPosted.get('content')
-    image = informationPosted.get('imageUrl')
-    id = informationPosted.get('user_id')
-    print(informationPosted)
-    print(request.FILES)
+    # informationPosted = json.loads(request.body)
+    # content = informationPosted.get('content')
+    # image = informationPosted.get('imageUrl')
+    # id = informationPosted.get('user_id')
+    content = request.POST['content']
+    image = request.FILES['imageUrl']
+    id = request.POST['user_id']
     try:
       poster = get_object_or_404(User, id = id)
       post = Post.objects.create(content = content, poster = poster, image = image)

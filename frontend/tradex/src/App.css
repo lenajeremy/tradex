@@ -1,8 +1,0 @@
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-.container:not(.header){
-  width: 50%!important;
-}

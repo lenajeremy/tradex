@@ -60,7 +60,6 @@ def register(request):
 
 @csrf_exempt
 def login_view(request):
-  print(request.FILES)
   if request.method == 'POST':
     data_sent = json.loads(request.body)
     username = data_sent['username']
