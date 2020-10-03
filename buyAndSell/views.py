@@ -17,10 +17,6 @@ def index(request):
 
 def new_post(request):
   if request.method == 'POST':
-    # informationPosted = json.loads(request.body)
-    # content = informationPosted.get('content')
-    # image = informationPosted.get('imageUrl')
-    # id = informationPosted.get('user_id')
     content = request.POST['content']
     image = request.FILES['imageUrl']
     id = request.POST['user_id']
@@ -64,14 +60,11 @@ def get_all_users(request):
 def get_all_posts(request):
   start = Post.objects.count() - int(request.GET.get('start'))
   end = Post.objects.count() - int(request.GET.get('end'))
-  print(start, end)
   valid_posts = []
   
   for post in Post.objects.order_by('-dateCreated'):
     if post.test(start, end):
       valid_posts.append(post)
-      
-  print(valid_posts)
       
   return JsonResponse({'posts': [post.serialize() for post in valid_posts]})
 
@@ -120,23 +113,23 @@ def post_operation(request, operation, post_id):
     
     # if there is a get request
   return JsonResponse({'message': "POST or PUT request is required",'status': 403})
-  
-def perform_product_operation(request, product_id, operation, user_id):
-  try:
-    product = Product.objects.get(id = product_id)
-    if operation == 'add':
-      print(request.user)
-    else:
-      pass
-    return JsonResponse({'product': product.serialize()})
-  except Product.DoesNotExist:
-    return HttpResponse(f"Product with the id {product_id} does not exist")
-  
-def get_user_field(request, user_id, field):
+
+
+@csrf_exempt
+def edit_user_profile(request, user_id, operation):
   user = User.objects.get(id = user_id)
-  if field.lower() == "posts":
-    return JsonResponse({'user_posts': [post.serialize() for post in Post.objects.filter(poster = user)]})
-  elif field.lower() == 'products' and user.userType == 'seller':
-    return JsonResponse({'user_products': [product.serialize() for product in Product.objects.filter(store = Store.objects.get(user = user))]})
-  else:
-    return JsonResponse({'message': "User with such details not found", 'status': 404})
+  if request.method == 'POST' and operation == 'edit':
+    bio = request.POST['bio']
+    status = request.POST['status']
+    userProfile = user.profile
+    userProfile.bio=bio
+    userProfile.status = status
+    userProfile.save()
+    try:
+      new_profile_image = request.FILES['profile_image']
+      user.profile_picture = new_profile_image
+      user.save()
+    except Exception as e:
+      print(e)
+    return JsonResponse({'message': "User profile has been updated", "status": 200})
+  return JsonResponse({'message': "Post or PUT request required", "status": 400})

@@ -39,8 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'buyAndSell',
     'userAuthentication',
-    'corsheaders',
-    'rest_framework'
+    'corsheaders'
 ]
 
 MIDDLEWARE = [

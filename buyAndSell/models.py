@@ -33,7 +33,6 @@ class Product(models.Model):
     data_to_return = {'id': self.id, 'name': self.name, 'description': self.description, 'price': self.price, 'imageUrl': self.imageUrl.url, 'store': self.store, 'isAvailable': self.isAvailable, 'dateAdded': self.dataAdded.timestamp, 'owner': {'id': self.getOwner().id, 'username': self.getOwner().username}}
     return data_to_return
   
-  
   def __str__(self):
       return f"{self.name} {self.price}"
 
@@ -51,16 +50,17 @@ class Cart(models.Model):
   
 class Post(models.Model):
   content = models.TextField()
-  poster = models.ForeignKey(User, on_delete= models.CASCADE, related_name='posts')
+  poster = models.ForeignKey(User, on_delete= models.DO_NOTHING, related_name='posts')
   image = models.ImageField(upload_to = 'post_images')
   dateCreated = models.DateTimeField(auto_now_add = True)
   
   def serialize(self):
-    data_to_return = {'id': self.id, "content": self.content, "poster": self.poster.username, 'image': "image" or self.image.url, 'dateCreated': self.dateCreated.timestamp(), 'number_of_likes': len(self.likes.all())}
+    data_to_return = {'id': self.id, "content": self.content, "poster": self.poster.username, 'image': self.image.url, 'dateCreated': self.dateCreated.timestamp(), 'number_of_likes': len(self.likes.all()), 'posterPicture': self.poster.profile_picture.url}
     return data_to_return
   
   def test(self, start, end):
-    if self.id <= start and self.id >= end:
+    index = list(Post.objects.all()).index(self)
+    if index <= start and index >= end:
       return self
     
   def __str__(self):
@@ -79,7 +79,7 @@ class Account(models.Model):
     return f"NAME: {self.owner.first_name} {self.owner.last_name} NUMBER: {str(self.number)}"
   
 class Like(models.Model):
-  post = models.ForeignKey(Post, on_delete = models.DO_NOTHING, related_name='likes')
+  post = models.ForeignKey(Post, on_delete = models.CASCADE, related_name='likes')
   liker = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'likes')
   
   def __str__(self):

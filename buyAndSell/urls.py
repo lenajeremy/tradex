@@ -12,5 +12,6 @@ urlpatterns = [
     path('posts/all', views.get_all_posts, name = 'get_all_posts'),
     path('products/all', views.get_all_products, name = 'get_all_products'),
     path('posts/<int:post_id>', views.get_post, name = 'get_post'),
-    path('post/<int:post_id>/<str:operation>', views.post_operation, name = 'post_operation')
+    path('post/<int:post_id>/<str:operation>', views.post_operation, name = 'post_operation'),
+    path('user/<int:user_id>/<str:operation>', views.edit_user_profile, name = 'edit_user_profile')
 ]

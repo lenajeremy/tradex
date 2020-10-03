@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.password_validation import validate_password, ValidationError
 from django.db import IntegrityError
 from .models import User
-from django.contrib.auth.hashers import PBKDF2PasswordHasher
+from django.contrib.auth.hashers import BCryptSHA256PasswordHasher
 from buyAndSell.models import Store, Account, Cart
 from .models import User_profile
 from django.views.decorators.csrf import csrf_exempt
@@ -12,7 +12,7 @@ import json
 
 
 # Create your views here.
-hasher = PBKDF2PasswordHasher()
+hasher = BCryptSHA256PasswordHasher()
 @csrf_exempt
 def register(request):
   if request.method == "POST":
