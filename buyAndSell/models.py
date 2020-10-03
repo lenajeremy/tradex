@@ -20,17 +20,19 @@ class Product(models.Model):
   name = models.CharField(max_length=100)
   description = models.CharField(max_length=200)
   price = models.IntegerField()
-  imageUrl = models.ImageField(upload_to = 'product_images')
+  image = models.ImageField(upload_to = 'product_images')
   watchers = models.ManyToManyField(User, related_name='watched_products')
   store = models.ForeignKey(Store, on_delete = models.CASCADE, related_name = 'products')
   isAvailable = models.BooleanField(default = False)
-  dataAdded = models.DateTimeField(auto_now_add=True)
+  dateCreated = models.DateTimeField(auto_now_add=True)
   
-  def getOwner(self):
-    return self.store.user
+  def test(self, start, end):
+    index = list(Product.objects.all()).index(self)
+    if index <= start and index >= end:
+      return self
   
   def serialize(self):
-    data_to_return = {'id': self.id, 'name': self.name, 'description': self.description, 'price': self.price, 'imageUrl': self.imageUrl.url, 'store': self.store, 'isAvailable': self.isAvailable, 'dateAdded': self.dataAdded.timestamp, 'owner': {'id': self.getOwner().id, 'username': self.getOwner().username}}
+    data_to_return = {'id': self.id, 'name': self.name, 'description': self.description, 'price': self.price, 'image': self.image.url, 'isAvailable': self.isAvailable, 'dateCreated': self.dateCreated.timestamp(), 'owner': {'id': self.store.user.id, 'username': self.store.user.username}}
     return data_to_return
   
   def __str__(self):

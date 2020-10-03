@@ -75,8 +75,18 @@ def get_post(request, post_id):
     return JsonResponse({'message': e.__str__(), 'status': 404})
 
 
-def get_all_products(request):
-  return JsonResponse({'allProducts': [product.serialize() for product in Product.objects.all()]})
+def get_store(request, owner_id):
+  user = User.objects.get(id = owner_id)
+  store = user.store.get()
+  start = store.products.count() - int(request.GET.get('start'))
+  end = store.products.count() - int(request.GET.get('end'))
+  valid_posts = []
+  
+  for product in store.products.order_by('-dateCreated'):
+    if product.test(start, end):
+      valid_posts.append(product)
+  
+  return JsonResponse({'products': [product.serialize() for product in valid_posts]})
 
 @csrf_exempt
 def post_operation(request, operation, post_id):
