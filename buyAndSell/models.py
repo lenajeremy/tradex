@@ -70,7 +70,7 @@ class Post(models.Model):
   
 class Account(models.Model):
   owner = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'account')
-  number = models.IntegerField(default = random.randint(9999999, 99999999))
+  number = models.IntegerField(default = random.randint(9999999, 99999999), unique = True)
   amount = models.IntegerField(default = 0)
   
   def serialize(self):

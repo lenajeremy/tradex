@@ -86,7 +86,7 @@ def get_store(request, owner_id):
     if product.test(start, end):
       valid_posts.append(product)
   
-  return JsonResponse({'products': [product.serialize() for product in valid_posts]})
+  return JsonResponse({'products': [product.serialize() for product in valid_posts], 'status': 200})
 
 @csrf_exempt
 def post_operation(request, operation, post_id):
