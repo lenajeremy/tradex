@@ -58,6 +58,8 @@ def get_all_users(request):
   return JsonResponse({'users': [user.serialize() for user in User.objects.exclude(username = 'admin')], 'status': 200})
 
 def get_all_posts(request):
+  print(int(request.GET.get('start')))
+  print(int(request.GET.get('end')))
   start = Post.objects.count() - int(request.GET.get('start'))
   end = Post.objects.count() - int(request.GET.get('end'))
   valid_posts = []
